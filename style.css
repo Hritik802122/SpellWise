@@ -1,0 +1,166 @@
+/* --- General Setup & Design System --- */
+:root {
+    --gradient-start: #8e2de2;
+    --gradient-end: #4a00e0;
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --text-color: #f0f0f0;
+    --text-color-dark: #e0e0e0;
+    --primary-font: 'Poppins', sans-serif;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --error-color: #ff4757;
+    --success-color: #2ed573;
+    --popup-bg: rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--primary-font);
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+/* --- Animated Background --- */
+.background-letters {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; pointer-events: none;
+}
+.background-letters span {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.05);
+    font-size: 5vw;
+    font-weight: 700;
+    animation: floatUp 25s linear infinite;
+}
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-100vh); opacity: 0; }
+}
+
+
+/* --- Main Card (Glassmorphism) --- */
+.container { width: 100%; max-width: 800px; }
+.spell-checker-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 2.5rem 3rem;
+}
+
+header h1 {
+    font-weight: 700; font-size: 2.5rem; text-align: center;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ffffff, #dcdcdc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+header p { font-size: 1.1rem; color: var(--text-color-dark); margin-bottom: 2rem; text-align: center; }
+
+/* --- Input Area & Result Overlay --- */
+.input-area { position: relative; }
+#result-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    padding: 1.5rem; border-radius: 15px;
+    font-size: 1.1rem; line-height: 1.6; white-space: pre-wrap;
+    pointer-events: none; /* Allows clicks to pass through to textarea */
+    color: transparent; /* Makes text invisible, we only use it for highlights */
+    z-index: 2;
+}
+#text-input {
+    width: 100%; height: 250px; padding: 1.5rem;
+    font-family: var(--primary-font); font-size: 1.1rem; line-height: 1.6;
+    color: var(--text-color); background-color: rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent; border-radius: 15px; resize: vertical;
+    transition: all 0.3s;
+}
+#text-input:focus {
+    outline: none; background-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--card-border);
+}
+
+/* --- Loader --- */
+.typing-loader { display: none; /* Logic in JS */ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.typing-loader span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #fff; margin: 0 4px; animation: typing 1.4s infinite both; }
+.typing-loader span:nth-child(1) { animation-delay: 0s; }
+.typing-loader span:nth-child(2) { animation-delay: 0.2s; }
+.typing-loader span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+/* --- Stats & Action Buttons --- */
+.stats-and-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; gap: 1rem; }
+.stats { color: var(--text-color-dark); font-size: 0.9rem; flex-shrink: 0; }
+.action-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.75rem 1.25rem; font-family: inherit; font-size: 0.95rem; font-weight: 600;
+    border: 1px solid var(--card-border); border-radius: 10px; cursor: pointer;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;
+    backdrop-filter: blur(5px);
+}
+.btn:disabled { cursor: not-allowed; opacity: 0.5; transform: none !important; box-shadow: none !important; }
+.btn:not(:disabled):hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.btn:not(:disabled):active { transform: translateY(-1px) scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.15) inset; }
+
+.btn-primary { color: white; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); }
+.btn-secondary { color: var(--text-color); background: rgba(255, 255, 255, 0.1); }
+.btn-secondary:hover:not(:disabled) { background: rgba(255, 255, 255, 0.2); }
+
+/* --- Highlighting & Popups --- */
+.incorrect {
+    background-color: rgba(255, 71, 87, 0.25);
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    pointer-events: all; /* Make this specific element clickable */
+}
+.suggestion-popup {
+    visibility: hidden; opacity: 0;
+    position: absolute; bottom: 120%; left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    background: var(--popup-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 0.5rem; z-index: 10;
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1.25);
+    display: flex; flex-direction: column; min-width: 180px;
+}
+.incorrect:hover .suggestion-popup { visibility: visible; opacity: 1; transform: translateX(-50%) scale(1); }
+
+.suggestion-item, .popup-action {
+    padding: 0.5rem 1rem; width: 100%; text-align: left; background: none; border: none;
+    color: var(--text-color); cursor: pointer; border-radius: 6px; transition: background-color 0.2s;
+}
+.suggestion-item:hover, .popup-action:hover { background-color: rgba(255, 255, 255, 0.1); }
+.no-suggestions { padding: 0.5rem 1rem; color: #aaa; }
+.popup-divider { height: 1px; background-color: var(--card-border); margin: 0.5rem 0; }
+.popup-action { font-size: 0.85rem; color: #ccc; }
+.popup-action i { margin-right: 0.5rem; width: 12px; }
+
+/* --- Toast Notification --- */
+#toast-notification {
+    position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--success-color), #27ae60);
+    color: white; padding: 1rem 1.5rem; border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: 500; z-index: 100;
+    transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+#toast-notification.show { bottom: 30px; }
+
+@media (max-width: 600px) {
+    body { padding: 1rem; }
+    .spell-checker-card { padding: 2rem 1.5rem; }
+    .stats-and-actions { flex-direction: column; gap: 1rem; align-items: stretch; }
+    .action-buttons { justify-content: center; }
+}
