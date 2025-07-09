@@ -41,7 +41,7 @@ SpellWise is a smart and easy-to-use spelling checker that works right in your b
    Loads Hunspell .aff and .dic files via Typo.js and prepares the overlay system.
 
 2. **Dual Layer UI**:  
-   Uses a hidden <textarea> for typing and a visible overlay `<div>` to display styled words and suggestions.
+   Uses a hidden <textarea> for typing and a visible overlay <div> to display styled words and suggestions.
 
 3. **Debounced Checking**:  
    Typing is monitored with debouncing to avoid lag; spell check runs 300ms after input stops.
