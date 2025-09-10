@@ -67,7 +67,7 @@ header h1 {
 }
 header p { font-size: 1.1rem; color: var(--text-color-dark); margin-bottom: 2rem; text-align: center; }
 
-/* --- Input Area & Result Overlay --- */
+
 .input-area { position: relative; }
 #result-overlay {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -89,7 +89,7 @@ header p { font-size: 1.1rem; color: var(--text-color-dark); margin-bottom: 2rem
     border-color: var(--card-border);
 }
 
-/* --- Loader --- */
+
 .typing-loader { display: none; /* Logic in JS */ position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .typing-loader span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #fff; margin: 0 4px; animation: typing 1.4s infinite both; }
 .typing-loader span:nth-child(1) { animation-delay: 0s; }
@@ -163,4 +163,5 @@ header p { font-size: 1.1rem; color: var(--text-color-dark); margin-bottom: 2rem
     .spell-checker-card { padding: 2rem 1.5rem; }
     .stats-and-actions { flex-direction: column; gap: 1rem; align-items: stretch; }
     .action-buttons { justify-content: center; }
+
 }
